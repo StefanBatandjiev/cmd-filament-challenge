@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\QuoteStatus;
 use App\Enums\ServiceType;
 use App\Filament\Components\Tables\Actions\ApproveAction;
+use App\Filament\Components\Tables\Actions\RejectAction;
 use App\Filament\Resources\QuoteResource\Pages;
 use App\Filament\Resources\QuoteResource\RelationManagers;
 use App\Models\Quote;
@@ -104,7 +105,8 @@ class QuoteResource extends Resource
             ->defaultSort('booked_at', 'desc')
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                ApproveAction::make('approve')
+                ApproveAction::make('approve'),
+                RejectAction::make('reject')
             ]);
     }
 
