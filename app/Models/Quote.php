@@ -12,6 +12,7 @@ class Quote extends Model
         'service' => ServiceType::class,
         'booked_at' => 'datetime',
         'duration' => 'integer',
+        'price' => 'integer',
         'status' => QuoteStatus::class,
     ];
 }
