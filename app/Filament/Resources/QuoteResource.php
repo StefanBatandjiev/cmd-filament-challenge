@@ -6,6 +6,7 @@ use App\Enums\QuoteStatus;
 use App\Enums\ServiceType;
 use App\Filament\Components\Tables\Actions\ApproveAction;
 use App\Filament\Components\Tables\Actions\RejectAction;
+use App\Filament\Components\Tables\Actions\ScheduleAction;
 use App\Filament\Resources\QuoteResource\Pages;
 use App\Filament\Resources\QuoteResource\RelationManagers;
 use App\Models\Quote;
@@ -106,7 +107,8 @@ class QuoteResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 ApproveAction::make('approve'),
-                RejectAction::make('reject')
+                RejectAction::make('reject'),
+                ScheduleAction::make('schedule')
             ]);
     }
 
