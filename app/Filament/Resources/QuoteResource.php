@@ -2,13 +2,17 @@
 
 namespace App\Filament\Resources;
 
+use App\Enums\QuoteStatus;
+use App\Enums\ServiceType;
 use App\Filament\Resources\QuoteResource\Pages;
 use App\Filament\Resources\QuoteResource\RelationManagers;
 use App\Models\Quote;
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -32,27 +36,71 @@ class QuoteResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name')
-                ->searchable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('email')
-                ->searchable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('phone')
-                ->searchable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('address')
-                ->searchable(),
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('service')
-                ->badge(),
+                    ->badge(),
                 Tables\Columns\TextColumn::make('booked_at')
-                ->dateTime(),
+                    ->dateTime(),
                 Tables\Columns\TextColumn::make('duration')
-                ->numeric(),
+                    ->numeric(),
+                Tables\Columns\TextColumn::make('status')
+                    ->badge(),
                 Tables\Columns\TextColumn::make('created_at')
-                ->dateTime()
-                ->toggleable(true, true)
+                    ->dateTime()
+                    ->toggleable(true, true)
 
             ])
             ->filters([
-                //
+                Tables\Filters\SelectFilter::make('status')
+                    ->options(QuoteStatus::class),
+                Tables\Filters\SelectFilter::make('service')
+                    ->options(ServiceType::class),
+                Filter::make('created_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('created_at')
+                            ->label('Created Date')
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['created_at'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('created_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if (! $data['created_at']) {
+                            return null;
+                        }
+
+                        return 'Created at ' . Carbon::parse($data['created_at'])->toFormattedDateString();
+                    }),
+                Filter::make('booked_at')
+                    ->form([
+                        Forms\Components\DatePicker::make('booked_at')
+                            ->label('Booked Date')
+                    ])
+                    ->query(function (Builder $query, array $data): Builder {
+                        return $query
+                            ->when(
+                                $data['booked_at'],
+                                fn(Builder $query, $date): Builder => $query->whereDate('booked_at', '<=', $date),
+                            );
+                    })
+                    ->indicateUsing(function (array $data): ?string {
+                        if (! $data['booked_at']) {
+                            return null;
+                        }
+
+                        return 'Booked at ' . Carbon::parse($data['booked_at'])->toFormattedDateString();
+                    }),
             ])
+            ->defaultSort('booked_at', 'desc')
             ->actions([
                 Tables\Actions\EditAction::make(),
             ]);
