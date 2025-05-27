@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Enums\QuoteStatus;
 use App\Enums\ServiceType;
 use App\Filament\Components\Tables\Actions\ApproveAction;
+use App\Filament\Components\Tables\Actions\InvoiceAction;
 use App\Filament\Components\Tables\Actions\RejectAction;
 use App\Filament\Components\Tables\Actions\ScheduleAction;
 use App\Filament\Resources\QuoteResource\Pages;
@@ -108,7 +109,8 @@ class QuoteResource extends Resource
                 Tables\Actions\ViewAction::make(),
                 ApproveAction::make('approve'),
                 RejectAction::make('reject'),
-                ScheduleAction::make('schedule')
+                ScheduleAction::make('schedule'),
+                InvoiceAction::make('invoice')
             ]);
     }
 
@@ -124,7 +126,7 @@ class QuoteResource extends Resource
         return [
             'index' => Pages\ListQuotes::route('/'),
             'create' => Pages\CreateQuote::route('/create'),
-            'vire' => Pages\ViewQuote::route('/{record}'),
+            'view' => Pages\ViewQuote::route('/{record}'),
             'edit' => Pages\EditQuote::route('/{record}/edit'),
         ];
     }

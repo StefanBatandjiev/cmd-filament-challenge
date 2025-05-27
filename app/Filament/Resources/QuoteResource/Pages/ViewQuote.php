@@ -41,7 +41,8 @@ class ViewQuote extends ViewRecord
                                     ? '$' . $price
                                     : '$' . number_format($this->record->service->getPrice() * $duration, 2);
                             }),
-                        TextEntry::make('notes')->columnSpan(2)
+                        TextEntry::make('status')->badge(),
+                        TextEntry::make('notes')
                     ])->columns(2)
             ]);
     }
